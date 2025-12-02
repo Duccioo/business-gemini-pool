@@ -1,4 +1,5 @@
-# Business Gemini Pool 管理系统
+# Business Gemini Pool Rotation
+versione in inglese
 
 一个基于 Flask 的 Google Gemini Enterprise API 代理服务，支持多账号轮训、OpenAI 兼容接口和 Web 管理控制台。
 
