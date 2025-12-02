@@ -1,21 +1,20 @@
 # Business Gemini Pool Rotation
-versione in inglese
 
-一个基于 Flask 的 Google Gemini Enterprise API 代理服务，支持多账号轮训、OpenAI 兼容接口和 Web 管理控制台。
+A Flask-based Google Gemini Enterprise API proxy service with support for multi-account rotation, OpenAI-compatible API, and a web management console.
 
-## 项目结构
+## Project Structure
 
 ```
 /
-├── gemini.py                      # 后端服务主程序
-├── index.html                     # Web 管理控制台前端
-├── business_gemini_session.json   # 配置文件
-└── README.md                      # 项目文档
+├── gemini.py                      # Backend service main program
+├── index.html                     # Web management console frontend
+├── business_gemini_session.json   # Configuration file
+└── README.md                      # Project documentation
 ```
 
-## 快速请求
+## Quick Request
 
-### 发送聊天请求
+### Send Chat Request
 
 ```bash
 curl --location --request POST 'http://127.0.0.1:8000/v1/chat/completions' \
@@ -25,90 +24,90 @@ curl --location --request POST 'http://127.0.0.1:8000/v1/chat/completions' \
     "messages": [
         {
             "role": "user",
-            "content": "你好"
+            "content": "Hello"
         }
     ],
     "safe_mode": false
 }'
 ```
 
-## 功能特性
+## Features
 
-### 核心功能
-- **多账号轮训**: 支持配置多个 Gemini 账号，自动轮训使用
-- **OpenAI 兼容接口**: 提供与 OpenAI API 兼容的接口格式
-- **流式响应**: 支持 SSE (Server-Sent Events) 流式输出
-- **代理支持**: 支持 HTTP/HTTPS 代理配置
-- **JWT 自动管理**: 自动获取和刷新 JWT Token
+### Core Features
+- **Multi-Account Rotation**: Support for configuring multiple Gemini accounts with automatic rotation
+- **OpenAI-Compatible API**: Provides API interface compatible with OpenAI format
+- **Streaming Response**: Supports SSE (Server-Sent Events) streaming output
+- **Proxy Support**: Supports HTTP/HTTPS proxy configuration
+- **Automatic JWT Management**: Automatically obtains and refreshes JWT tokens
 
-### 管理功能
-- **Web 控制台**: 美观的 Web 管理界面，支持明暗主题切换
-- **账号管理**: 添加、编辑、删除、启用/禁用账号
-- **模型配置**: 自定义模型参数配置
-- **代理测试**: 在线测试代理连接状态
-- **配置导入/导出**: 支持配置文件的导入导出
+### Management Features
+- **Web Console**: Beautiful web management interface with light/dark theme switching
+- **Account Management**: Add, edit, delete, enable/disable accounts
+- **Model Configuration**: Customize model parameter configuration
+- **Proxy Testing**: Online testing of proxy connection status
+- **Configuration Import/Export**: Support for importing and exporting configuration files
 
-## 文件说明
+## File Description Description
 
 ### gemini.py
 
-后端服务主程序，基于 Flask 框架开发。
+Backend service main program, developed based on Flask framework.
 
-#### 主要类和函数
+#### Main Classes and Functions
 
-| 名称 | 类型 | 说明 |
-|------|------|------|
-| `AccountManager` | 类 | 账号管理器，负责账号加载、保存、状态管理和轮训选择 |
-| `load_config()` | 方法 | 从配置文件加载账号和配置信息 |
-| `save_config()` | 方法 | 保存配置到文件 |
-| `get_next_account()` | 方法 | 轮训获取下一个可用账号 |
-| `mark_account_unavailable()` | 方法 | 标记账号为不可用状态 |
-| `create_jwt()` | 函数 | 创建 JWT Token |
-| `create_chat_session()` | 函数 | 创建聊天会话 |
-| `stream_chat()` | 函数 | 发送聊天请求并获取响应 |
-| `check_proxy()` | 函数 | 检测代理是否可用 |
+| Name | Type | Description |
+|------|------|-------------|
+| `AccountManager` | Class | Account manager, responsible for loading, saving, status management, and rotation selection of accounts |
+| `load_config()` | Method | Load accounts and configuration from config file |
+| `save_config()` | Method | Save configuration to file |
+| `get_next_account()` | Method | Get next available account through rotation |
+| `mark_account_unavailable()` | Method | Mark account as unavailable |
+| `create_jwt()` | Function | Create JWT Token |
+| `create_chat_session()` | Function | Create chat session |
+| `stream_chat()` | Function | Send chat request and get response |
+| `check_proxy()` | Function | Check if proxy is available |
 
-#### API 接口
+#### API Endpoints
 
-**OpenAI 兼容接口**
+**OpenAI-Compatible Endpoints**
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/v1/models` | 获取可用模型列表 |
-| POST | `/v1/chat/completions` | 聊天对话接口（支持图片） |
-| POST | `/v1/files` | 上传文件 |
-| GET | `/v1/files` | 获取文件列表 |
-| GET | `/v1/files/<id>` | 获取文件信息 |
-| DELETE | `/v1/files/<id>` | 删除文件 |
-| GET | `/v1/status` | 获取系统状态 |
-| GET | `/health` | 健康检查 |
-| GET | `/image/<filename>` | 获取缓存图片 |
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/v1/models` | Get available model list |
+| POST | `/v1/chat/completions` | Chat completion endpoint (supports images) |
+| POST | `/v1/files` | Upload file |
+| GET | `/v1/files` | Get file list |
+| GET | `/v1/files/<id>` | Get file information |
+| DELETE | `/v1/files/<id>` | Delete file |
+| GET | `/v1/status` | Get system status |
+| GET | `/health` | Health check |
+| GET | `/image/<filename>` | Get cached image |
 
-**管理接口**
+**Management Endpoints**
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/` | 返回管理页面 |
-| GET | `/api/accounts` | 获取账号列表 |
-| POST | `/api/accounts` | 添加账号 |
-| PUT | `/api/accounts/<id>` | 更新账号 |
-| DELETE | `/api/accounts/<id>` | 删除账号 |
-| POST | `/api/accounts/<id>/toggle` | 切换账号状态 |
-| POST | `/api/accounts/<id>/test` | 测试账号 JWT 获取 |
-| GET | `/api/models` | 获取模型配置 |
-| POST | `/api/models` | 添加模型 |
-| PUT | `/api/models/<id>` | 更新模型 |
-| DELETE | `/api/models/<id>` | 删除模型 |
-| GET | `/api/config` | 获取完整配置 |
-| PUT | `/api/config` | 更新配置 |
-| POST | `/api/config/import` | 导入配置 |
-| GET | `/api/config/export` | 导出配置 |
-| POST | `/api/proxy/test` | 测试代理 |
-| GET | `/api/proxy/status` | 获取代理状态 |
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/` | Return management page |
+| GET | `/api/accounts` | Get account list |
+| POST | `/api/accounts` | Add account |
+| PUT | `/api/accounts/<id>` | Update account |
+| DELETE | `/api/accounts/<id>` | Delete account |
+| POST | `/api/accounts/<id>/toggle` | Toggle account status |
+| POST | `/api/accounts/<id>/test` | Test account JWT acquisition |
+| GET | `/api/models` | Get model configuration |
+| POST | `/api/models` | Add model |
+| PUT | `/api/models/<id>` | Update model |
+| DELETE | `/api/models/<id>` | Delete model |
+| GET | `/api/config` | Get complete configuration |
+| PUT | `/api/config` | Update configuration |
+| POST | `/api/config/import` | Import configuration |
+| GET | `/api/config/export` | Export configuration |
+| POST | `/api/proxy/test` | Test proxy |
+| GET | `/api/proxy/status` | Get proxy status |
 
 ### business_gemini_session.json
 
-配置文件，JSON 格式，包含以下字段：
+Configuration file in JSON format, containing the following fields:
 
 ```json
 {
@@ -116,19 +115,19 @@ curl --location --request POST 'http://127.0.0.1:8000/v1/chat/completions' \
     "proxy_enabled": false,
     "accounts": [
         {
-            "team_id": "团队ID",
-            "secure_c_ses": "安全会话Cookie",
-            "host_c_oses": "主机Cookie",
-            "csesidx": "会话索引",
-            "user_agent": "浏览器UA",
+            "team_id": "Team ID",
+            "secure_c_ses": "Secure Session Cookie",
+            "host_c_oses": "Host Cookie",
+            "csesidx": "Session Index",
+            "user_agent": "Browser UA",
             "available": true
         }
     ],
     "models": [
         {
-            "id": "模型ID",
-            "name": "模型名称",
-            "description": "模型描述",
+            "id": "Model ID",
+            "name": "Model Name",
+            "description": "Model Description",
             "context_length": 32768,
             "max_tokens": 8192,
             "price_per_1k_tokens": 0.0015
@@ -137,63 +136,63 @@ curl --location --request POST 'http://127.0.0.1:8000/v1/chat/completions' \
 }
 ```
 
-#### 配置字段说明
+#### Configuration Field Description
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `proxy` | string | HTTP 代理地址 |
-| `proxy_enabled` | boolean | 代理开关，`true` 启用代理，`false` 禁用代理（默认 `false`） |
-| `accounts` | array | 账号列表 |
-| `accounts[].team_id` | string | Google Cloud 团队 ID |
-| `accounts[].secure_c_ses` | string | 安全会话 Cookie |
-| `accounts[].host_c_oses` | string | 主机 Cookie |
-| `accounts[].csesidx` | string | 会话索引 |
-| `accounts[].user_agent` | string | 浏览器 User-Agent |
-| `accounts[].available` | boolean | 账号是否可用 |
-| `models` | array | 模型配置列表 |
-| `models[].id` | string | 模型唯一标识 |
-| `models[].name` | string | 模型显示名称 |
-| `models[].description` | string | 模型描述 |
-| `models[].context_length` | number | 上下文长度限制 |
-| `models[].max_tokens` | number | 最大输出 Token 数 |
+| Field | Type | Description |
+|-------|------|-------------|
+| `proxy` | string | HTTP proxy address |
+| `proxy_enabled` | boolean | Proxy switch, `true` enables proxy, `false` disables proxy (default `false`) |
+| `accounts` | array | Account list |
+| `accounts[].team_id` | string | Google Cloud team ID |
+| `accounts[].secure_c_ses` | string | Secure session Cookie |
+| `accounts[].host_c_oses` | string | Host Cookie |
+| `accounts[].csesidx` | string | Session index |
+| `accounts[].user_agent` | string | Browser User-Agent |
+| `accounts[].available` | boolean | Whether account is available |
+| `models` | array | Model configuration list |
+| `models[].id` | string | Model unique identifier |
+| `models[].name` | string | Model display name |
+| `models[].description` | string | Model description |
+| `models[].context_length` | number | Context length limit |
+| `models[].max_tokens` | number | Maximum output token count |
 
 ### index.html
 
-Web 管理控制台前端，单文件 HTML 应用。
+Web management console frontend, single-file HTML application.
 
-#### 功能模块
+#### Feature Modules
 
-1. **仪表盘**: 显示系统概览、账号统计、代理状态
-2. **账号管理**: 账号的增删改查、状态切换、JWT 测试
-3. **模型配置**: 模型的增删改查
-4. **系统设置**: 代理配置、配置导入导出
+1. **Dashboard**: Display system overview, account statistics, proxy status
+2. **Account Management**: Add, delete, update, query accounts, status switching, JWT testing
+3. **Model Configuration**: Add, delete, update, query models
+4. **System Settings**: Proxy configuration, configuration import/export
 
-#### 界面特性
+#### Interface Features
 
-- 响应式设计，适配不同屏幕尺寸
-- 支持明暗主题切换
-- Google Material Design 风格
-- 实时状态更新
+- Responsive design, adapted to different screen sizes
+- Support for light/dark theme switching
+- Google Material Design style
+- Real-time status updates
 
-## 快速开始
+## Quick Start
 
-### 环境要求
+### Requirements
 
 - Python 3.7+
 - Flask
 - requests
 
-### 方式一：直接运行
+### Method 1: Direct Execution
 
-#### 安装依赖
+#### Install Dependencies
 
 ```bash
 pip install flask requests flask-cors
 ```
 
-#### 配置账号
+#### Configure Account
 
-编辑 `business_gemini_session.json` 文件，添加你的 Gemini 账号信息：
+Edit the `business_gemini_session.json` file and add your Gemini account information:
 
 ```json
 {
@@ -213,38 +212,38 @@ pip install flask requests flask-cors
 }
 ```
 
-#### 启动服务
+#### Start Service
 
 ```bash
 python gemini.py
 ```
 
-服务将在 `http://127.0.0.1:8000` 启动。
+The service will start at `http://127.0.0.1:8000`.
 
-### 方式二：使用 docker-compose 启动服务
+### Method 2: Using Docker Compose
 
-在项目目录下手动创建 business_gemini_session.json 后
+After manually creating `business_gemini_session.json` in the project directory:
 
-使用命令启动：
+Start with the command:
 
 ```bash
 docker-compose up -d
 ```
 
-### 访问管理控制台
+### Access Management Console
 
-- 直接运行：`http://127.0.0.1:8000/`
-- Docker 部署：`http://127.0.0.1:8000/`
+- Direct execution: `http://127.0.0.1:8000/`
+- Docker deployment: `http://127.0.0.1:8000/`
 
-## API 使用示例
+## API Usage Examplese Examples
 
-### 获取模型列表
+### Get Model List
 
 ```bash
 curl http://127.0.0.1:8000/v1/models
 ```
 
-### 聊天对话
+### Chat Completion
 
 ```bash
 curl -X POST http://127.0.0.1:8000/v1/chat/completions \
@@ -258,7 +257,7 @@ curl -X POST http://127.0.0.1:8000/v1/chat/completions \
   }'
 ```
 
-### 流式对话
+### Streaming Chat
 
 ```bash
 curl -X POST http://127.0.0.1:8000/v1/chat/completions \
@@ -272,20 +271,20 @@ curl -X POST http://127.0.0.1:8000/v1/chat/completions \
   }'
 ```
 
-### 带图片对话
+### Chat with Images
 
-支持两种图片发送方式：
+Two methods are supported for sending images:
 
-#### 方式1：先上传文件，再引用 file_id
+#### Method 1: Upload file first, then reference file_id first, then reference file_id
 
 ```bash
-# 1. 上传图片
+# 1. Upload image
 curl -X POST http://127.0.0.1:8000/v1/files \
   -F "file=@image.png" \
   -F "purpose=assistants"
-# 返回: {"id": "file-xxx", ...}
+# Returns: {"id": "file-xxx", ...}
 
-# 2. 引用 file_id 发送消息
+# 2. Reference file_id to send message
 curl -X POST http://127.0.0.1:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -294,7 +293,7 @@ curl -X POST http://127.0.0.1:8000/v1/chat/completions \
       {
         "role": "user",
         "content": [
-          {"type": "text", "text": "描述这张图片"},
+          {"type": "text", "text": "Describe this image"},
           {"type": "file", "file_id": "file-xxx"}
         ]
       }
@@ -302,9 +301,9 @@ curl -X POST http://127.0.0.1:8000/v1/chat/completions \
   }'
 ```
 
-#### 方式2：内联 base64 图片（自动上传）
+#### Method 2: Inline base64 image (automatic upload)
 
-**OpenAI 标准格式**
+**OpenAI Standard Format**
 
 ```bash
 curl -X POST http://127.0.0.1:8000/v1/chat/completions \
@@ -315,7 +314,7 @@ curl -X POST http://127.0.0.1:8000/v1/chat/completions \
       {
         "role": "user",
         "content": [
-          {"type": "text", "text": "描述这张图片"},
+          {"type": "text", "text": "Describe this image"},
           {"type": "image_url", "image_url": {"url": "data:image/png;base64,..."}}
         ]
       }
@@ -323,7 +322,7 @@ curl -X POST http://127.0.0.1:8000/v1/chat/completions \
   }'
 ```
 
-**prompts 格式（files 数组）**
+**prompts Format (files array)**
 
 ```bash
 curl -X POST http://127.0.0.1:8000/v1/chat/completions \
@@ -333,7 +332,7 @@ curl -X POST http://127.0.0.1:8000/v1/chat/completions \
     "prompts": [
       {
         "role": "user",
-        "text": "描述这张图片",
+        "text": "Describe this image",
         "files": [
           {
             "data": "data:image/png;base64,...",
@@ -345,15 +344,15 @@ curl -X POST http://127.0.0.1:8000/v1/chat/completions \
   }'
 ```
 
-> **注意**: 内联 base64 图片会自动上传到 Gemini 获取 fileId，然后发送请求。
+> **Note**: Inline base64 images are automatically uploaded to Gemini to obtain the fileId before sending the request.loaded to Gemini to obtain the fileId before sending the request.
 
-## 注意事项
+## Important Notes
 
-1. **安全性**: 配置文件中包含敏感信息，请妥善保管，不要提交到公开仓库
-2. **代理**: 如果需要访问 Google 服务，可能需要配置代理
-3. **账号限制**: 请遵守 Google 的使用条款，合理使用 API
-4. **JWT 有效期**: JWT Token 有效期有限，系统会自动刷新
+1. **Security**: The configuration file contains sensitive information, please keep it safe and do not commit it to public repositories
+2. **Proxy**: If you need to access Google services, you may need to configure a proxy
+3. **Account Restrictions**: Please comply with Google's terms of service and use the API responsibly
+4. **JWT Expiration**: JWT tokens have a limited validity period, the system will automatically refresh them
 
-## 许可证
+## License
 
 MIT License
